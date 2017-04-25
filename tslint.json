@@ -1,0 +1,49 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:latest",
+    "tslint-react"
+  ],
+  "jsRules": {
+    "max-line-length": [
+      true,
+      80
+    ]
+  },
+  "rules": {
+    "arrow-parens": [
+      true,
+      "ban-single-arg-parens"
+    ],
+    "linebreak-style": [
+      true,
+      "LF"
+    ],
+    "max-line-length": [
+      true,
+      80
+    ],
+    "member-ordering": [
+      true,
+      "static-before-instance",
+      "variables-before-functions"
+    ],
+    "quotemark": [
+      true,
+      "single",
+      "jsx-double",
+      "avoid-escape"
+    ],
+    "semicolon": [
+      true,
+      "never"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "never",
+        "singleline": "never"
+      }
+    ]
+  }
+}

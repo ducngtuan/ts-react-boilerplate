@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "es6",
+    "target": "es6",
+    "strict": true,
+    "baseUrl": "",
+    "sourceMap": true,
+    "outDir": "dist/out-tsc",
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useBabel": true,
+    "useCache": true
+  }
+}
