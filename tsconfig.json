@@ -3,14 +3,20 @@
     "module": "es6",
     "target": "es6",
     "strict": true,
-    "baseUrl": "",
+    "baseUrl": "./",
     "sourceMap": true,
     "outDir": "dist/out-tsc",
     "jsx": "preserve",
+    "noEmitOnError": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "paths": {
+      "~frontend/*": [
+        "./frontend/src/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules",
