@@ -8,6 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 const ENV = process.env.NODE_ENV || 'development'
+const isProd = ENV === 'production'
 
 const config = {
   context: path.resolve(__dirname, 'frontend'),
@@ -23,11 +24,6 @@ const config = {
     chunkFilename: 'static/js/[id].[chunkhash].js'
   },
 
-  resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js'],
-    modules: ['src', 'node_modules']
-  },
-
   stats: {
     colors: true,
     modules: false,
@@ -36,7 +32,7 @@ const config = {
     chunkModules: false
   },
 
-  devtool: ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
+  devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
 
   devServer: {
     port: process.env.PORT || 8080,
@@ -53,7 +49,7 @@ const config = {
       {
         test: /\.tsx?$/,
         loader: 'awesome-typescript-loader',
-        exclude: /node_modules|__tests__/
+        exclude: /node_modules/
       },
       {
         test: /\.tsx?/,
@@ -69,34 +65,40 @@ const config = {
       },
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: 'style-loader'
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              minimize: ENV === 'production',
-              sourceMap: true
-            }
-          }, {
-            loader: 'postcss-loader'
-          }
-        ]
+        use: isProd
+          ? ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: ['css-loader?minimize', 'postcss-loader']
+          })
+          : ['style-loader', 'css-loader', 'postcss-loader']
       },
       {
         test: /\.less$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader', 'less-loader']
-        })
+        use: isProd
+          ? ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: ['css-loader?minimize', 'postcss-loader', 'less-loader']
+          })
+          : [
+            'style-loader',
+            'css-loader?minimize',
+            'postcss-loader',
+            'less-loader'
+          ]
       },
       {
         test: /\.(styl|stylus)$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader', 'stylus-loader']
-        })
+        use: isProd
+          ? ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: ['css-loader?minimize', 'postcss-loader', 'stylus-loader']
+          })
+          : [
+            'style-loader',
+            'css-loader?minimize',
+            'postcss-loader',
+            'stylus-loader'
+          ]
       },
       {
         test: /\.json$/,
@@ -108,7 +110,7 @@ const config = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: ENV === 'production' ? 'file-loader' : 'url-loader',
+        loader: isProd ? 'file-loader' : 'url-loader',
         options: {
           limit: 10000,
           name: 'static/img/[name].[hash:7].[ext]'
@@ -116,7 +118,7 @@ const config = {
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
-        loader: ENV === 'production' ? 'file-loader' : 'url-loader',
+        loader: isProd ? 'file-loader' : 'url-loader',
         options: {
           limit: 10000,
           name: 'static/fonts/[name].[hash:7].[ext]'
@@ -135,9 +137,7 @@ const config = {
         return (
           module.resource &&
           /\.(js|ts)x?$/.test(module.resource) &&
-          module.resource.indexOf(
-            path.join(__dirname, './node_modules')
-          ) === 0
+          module.resource.indexOf(path.join(__dirname, './node_modules')) === 0
         )
       }
     }),
@@ -151,7 +151,7 @@ const config = {
     new ExtractTextPlugin({
       filename: 'static/css/[name].[contenthash].css',
       allChunks: true,
-      disable: ENV !== 'production'
+      disable: !isProd
     }),
 
     new webpack.DefinePlugin({
@@ -172,48 +172,57 @@ const config = {
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
     })
-  ].concat(ENV === 'production' ? [
-    // Production Plugins Option
-    new webpack.optimize.UglifyJsPlugin({
-      output: { comments: false },
-      compress: {
-        warnings: false,
-        conditionals: true,
-        unused: true,
-        comparisons: true,
-        sequences: true,
-        dead_code: true,
-        evaluate: true,
-        if_return: true,
-        join_vars: true,
-        negate_iife: false
-      },
-      sourceMap: true
-    }),
-    new CompressionWebpackPlugin({
-      asset: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: /\.(js|css)$/,
-      threshold: 10240,
-      minRatio: 0.8
-    }),
-    new OptimizeCSSPlugin({
-      cssProcessorOptions: {
-        safe: true
-      }
-    }),
-    new CopyWebpackPlugin([
-      {
-        from: './static',
-        to: 'static',
-        ignore: ['.*']
-      }
-    ])
-  ] : [
-      // Development Plugins Option
-      new webpack.HotModuleReplacementPlugin(),
-      new FriendlyErrorsPlugin()
-    ])
+  ].concat(
+    isProd
+      ? [
+          // Production Plugins Option
+        new webpack.optimize.UglifyJsPlugin({
+          output: { comments: false },
+          compress: {
+            warnings: false,
+            conditionals: true,
+            unused: true,
+            comparisons: true,
+            sequences: true,
+            dead_code: true,
+            evaluate: true,
+            if_return: true,
+            join_vars: true,
+            negate_iife: false
+          },
+          sourceMap: true
+        }),
+        new CompressionWebpackPlugin({
+          asset: '[path].gz[query]',
+          algorithm: 'gzip',
+          test: /\.(js|css)$/,
+          threshold: 10240,
+          minRatio: 0.8
+        }),
+        new OptimizeCSSPlugin({
+          cssProcessorOptions: {
+            safe: true
+          }
+        }),
+        new CopyWebpackPlugin([
+          {
+            from: './static',
+            to: 'static',
+            ignore: ['.*']
+          }
+        ])
+      ]
+      : [
+          // Development Plugins Option
+        new webpack.HotModuleReplacementPlugin(),
+        new FriendlyErrorsPlugin()
+      ]
+  ),
+
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    modules: ['node_modules']
+  }
 }
 
 module.exports = config
