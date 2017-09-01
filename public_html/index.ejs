@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<% for (var chunk of webpack.chunks) { %>
+		<% for (var file of chunk.files) { %>
+			<% if (file.match(/\.(js|css)$/)) { %>
+				<% if (chunk.initial) { %>
+					<link rel="preload" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>">
+				<% } else { %>
+					<link rel="prefetch" href="<%= htmlWebpackPlugin.files.publicPath + file %>">
+				<% } %>
+			<% } %>
+		<% } %>
+	<% } %>
+	<meta charset="utf-8">
+	<title>ts react boilerplate</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+	<meta name="description" content="UnserTeam">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="UnserTeam">
+	<meta name="application-name" content="UnserTeam">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="theme-color" content="#212121">
+	<link rel="shortcut icon" href="/static/favicon.ico">
+	<link rel="manifest" href="./static/manifest.json">
+</head>
+
+<body>
+<!--[if lte IE 10]>
+<div class="fixed toast toast-error" style="bottom: 10px; right: 10px; width: 80%; z-index: 1000">
+  <p>Ihr Browser ist <strong>veraltet</strong> und wird daher nicht vollständig
+    unterstützt. <a href="//browsehappy.com/">Aktualisieren Sie Ihren Browser</a> für mehr
+    Sicherheit, Komfort und die einwandfreie Nutzung dieser Webseite.</p>
+</div>
+<![endif]-->
+
+	<div id="App"></div>
+</body>
+</html>

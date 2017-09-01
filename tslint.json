@@ -1,57 +1,27 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:latest",
-    "tslint-react"
-  ],
+  "extends": ["tslint:latest", "tslint-react", "tslint-config-prettier"],
   "jsRules": {
-    "max-line-length": [
-      true,
-      80
-    ]
+    "max-line-length": [true, 80]
   },
   "rules": {
-    "arrow-parens": [
-      true,
-      "ban-single-arg-parens"
-    ],
-    "interface-name": [
-      true,
-      "never-prefix"
-    ],
+    "interface-name": [true, "never-prefix"],
     "interface-over-type-literal": false,
     "jsx-no-lambda": false,
-    "linebreak-style": [
-      true,
-      "LF"
-    ],
+    "linebreak-style": [true, "LF"],
     "max-classes-per-file": false,
-    "max-line-length": [
-      true,
-      80
-    ],
+    "max-line-length": [true, 80],
     "member-ordering": [
       true,
       "static-before-instance",
       "variables-before-functions"
     ],
     "no-unused-variable": {
-      "options": [
-        true
-      ],
+      "options": [true],
       "severity": "warning"
     },
     "object-literal-sort-keys": false,
-    "quotemark": [
-      true,
-      "single",
-      "jsx-double",
-      "avoid-escape"
-    ],
-    "semicolon": [
-      true,
-      "never"
-    ],
+    "quotemark": [true, "single", "jsx-double", "avoid-escape"],
     "trailing-comma": [
       true,
       {

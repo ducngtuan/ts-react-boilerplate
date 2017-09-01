@@ -11,17 +11,9 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "paths": {
-      "~frontend/*": [
-        "./frontend/src/*"
-      ]
-    }
+    "moduleResolution": "node"
   },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
+  "exclude": ["node_modules", "dist"],
   "awesomeTypescriptLoaderOptions": {
     "useBabel": true,
     "useCache": true
